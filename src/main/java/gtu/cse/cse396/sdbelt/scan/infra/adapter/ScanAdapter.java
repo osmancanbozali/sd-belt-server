@@ -4,12 +4,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+
 import gtu.cse.cse396.sdbelt.scan.domain.model.GeneralStatistics;
 import gtu.cse.cse396.sdbelt.scan.domain.model.ProductStatistics;
 import gtu.cse.cse396.sdbelt.scan.domain.model.Scan;
 import gtu.cse.cse396.sdbelt.scan.domain.service.ScanService;
 import gtu.cse.cse396.sdbelt.scan.infra.model.ScanFilter;
 
+@Component
 public class ScanAdapter implements ScanService {
 
     @Override

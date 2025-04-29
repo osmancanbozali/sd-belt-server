@@ -1,8 +1,11 @@
 package gtu.cse.cse396.sdbelt.system.infra.adapter;
 
+import org.springframework.stereotype.Component;
+
 import gtu.cse.cse396.sdbelt.system.domain.model.System;
 import gtu.cse.cse396.sdbelt.system.domain.service.SystemService;
 
+@Component
 public class SystemAdapter implements SystemService {
 
     @Override

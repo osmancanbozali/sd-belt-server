@@ -22,6 +22,7 @@ public class ScanMapper {
 
     public static ScanEntity toEntity(Scan scan) {
         return new ScanEntity(
+                null, // ID is auto-generated
                 scan.productId(),
                 scan.timestamp(),
                 scan.isSuccess(),

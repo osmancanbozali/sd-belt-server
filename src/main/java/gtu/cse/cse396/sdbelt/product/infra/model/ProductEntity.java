@@ -16,7 +16,8 @@ import lombok.Setter;
 public class ProductEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "VARCHAR(36)") // H2 workaround for UUID
     private UUID id;
 
     @Column(nullable = false)

@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+
 import gtu.cse.cse396.sdbelt.product.domain.model.Product;
 import gtu.cse.cse396.sdbelt.product.domain.service.ProductService;
 
+@Component
 public class ProductAdapter implements ProductService {
 
     @Override

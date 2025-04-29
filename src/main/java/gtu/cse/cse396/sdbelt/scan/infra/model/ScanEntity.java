@@ -24,6 +24,15 @@ import java.time.LocalDateTime;
 public class ScanEntity {
 
     /**
+     * The unique identifier for this scan record.
+     * <p>
+     * This field is auto-generated and serves as the primary key for the entity.
+     */
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    /**
      * The unique identifier of the product that was scanned.
      * <p>
      * This field acts as a foreign key reference to a {@code ProductEntity}, although not explicitly mapped here.

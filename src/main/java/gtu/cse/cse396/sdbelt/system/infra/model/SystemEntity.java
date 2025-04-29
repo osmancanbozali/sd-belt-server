@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 public class SystemEntity {
 
     @Id
+    @Column(columnDefinition = "VARCHAR(36)") // H2 workaround for UUID
     private UUID id;
 
     @Column(nullable = false)
