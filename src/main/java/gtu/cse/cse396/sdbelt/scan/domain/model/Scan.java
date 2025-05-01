@@ -1,6 +1,6 @@
 package gtu.cse.cse396.sdbelt.scan.domain.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 import lombok.Builder;
@@ -26,7 +26,7 @@ public record Scan(
      * <p>
      * Indicates the exact date and time at which the scanning process took place.
      */
-    LocalDateTime timestamp,
+    Long timestamp,
 
     /**
      * Indicates whether the scan was successful.

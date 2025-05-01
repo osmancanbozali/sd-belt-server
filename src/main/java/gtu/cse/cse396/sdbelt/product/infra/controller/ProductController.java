@@ -34,7 +34,7 @@ public class ProductController {
             @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to retrieve product info.")
     })
-    @GetMapping("/{id}")
+    @GetMapping("/product/{id}")
     public Response<Product> getProduct(@PathVariable UUID id) {
         Product product = service.get(id);
         return ResponseBuilder.build(200, product);
@@ -60,7 +60,7 @@ public class ProductController {
             @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to delete product.")
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/product/{id}")
     public Response<UUID> deleteProduct(@PathVariable UUID id) {
         service.delete(id);
         return ResponseBuilder.build(200, id);
@@ -86,7 +86,7 @@ public class ProductController {
             @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to update product.")
     })
-    @PostMapping("/{id}")
+    @PostMapping("/product/{id}")
     public Response<Product> updateProduct(@PathVariable UUID id, @RequestBody Product product) {
         service.update(id, product.name(), product.description());
         return ResponseBuilder.build(200, product);
