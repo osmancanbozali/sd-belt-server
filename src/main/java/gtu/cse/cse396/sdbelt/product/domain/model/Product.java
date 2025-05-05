@@ -5,9 +5,6 @@ import java.util.UUID;
 
 import lombok.Builder;
 
-import lombok.Builder;
-
-import java.time.LocalDateTime;
 
 /**
  * Represents a product that moves through the conveyor belt and may be scanned.
