@@ -1,6 +1,5 @@
 package gtu.cse.cse396.sdbelt.scan.infra.model;
 
-import java.util.UUID;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +11,8 @@ import java.time.LocalDateTime;
 /**
  * JPA entity representing a scan record in the conveyor belt scanning system.
  * <p>
- * Each instance corresponds to a row in the {@code scans} table and captures the
+ * Each instance corresponds to a row in the {@code scans} table and captures
+ * the
  * result of an individual scan operation for a product.
  */
 @Entity
@@ -35,21 +35,24 @@ public class ScanEntity {
     /**
      * The unique identifier of the product that was scanned.
      * <p>
-     * This field acts as a foreign key reference to a {@code ProductEntity}, although not explicitly mapped here.
+     * This field acts as a foreign key reference to a {@code ProductEntity},
+     * although not explicitly mapped here.
      */
-    private UUID productId;
+    private Long productId;
 
     /**
      * The timestamp when the scan was performed.
      * <p>
-     * Automatically set just before the entity is persisted using {@link #onCreate()}.
+     * Automatically set just before the entity is persisted using
+     * {@link #onCreate()}.
      */
     private LocalDateTime timestamp;
 
     /**
      * Indicates whether the scan was successful.
      * <p>
-     * A value of {@code true} denotes a successful scan, while {@code false} indicates a failure.
+     * A value of {@code true} denotes a successful scan, while {@code false}
+     * indicates a failure.
      */
     private Boolean isSuccess;
 

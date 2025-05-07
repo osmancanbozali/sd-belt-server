@@ -2,7 +2,6 @@ package gtu.cse.cse396.sdbelt.scan.infra.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +28,7 @@ import gtu.cse.cse396.sdbelt.shared.model.ResponseBuilder;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class ScanController {
-    
+
     private final ScanService service;
 
     @Operation(summary = "Get all scans", description = "Get all scans")
@@ -64,8 +63,9 @@ public class ScanController {
             @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to retrieve statistics.")
     })
-    @GetMapping(name = "/scans/statistics", params = {"startDate", "endDate"})
-    public Response<GeneralStatistics> getGeneralStatistics(@RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate) {
+    @GetMapping(value = "/scans/statistics", params = { "startDate", "endDate" })
+    public Response<GeneralStatistics> getGeneralStatistics(@RequestParam LocalDateTime startDate,
+            @RequestParam LocalDateTime endDate) {
         GeneralStatistics statistics = service.generateStatistics(startDate, endDate);
         return ResponseBuilder.build(200, statistics);
     }
@@ -77,8 +77,9 @@ public class ScanController {
             @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to retrieve statistics.")
     })
-    @GetMapping(value = "/scans/statistics", params = {"productId", "startDate", "endDate"})
-    public Response<ProductStatistics> getProductStatistics(@RequestParam(required = true) UUID productId, @RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate) {
+    @GetMapping(value = "/scans/statistics", params = { "productId", "startDate", "endDate" })
+    public Response<ProductStatistics> getProductStatistics(@RequestParam(required = true) Long productId,
+            @RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate) {
         ProductStatistics statistics = service.generateStatistics(productId, startDate, endDate);
         return ResponseBuilder.build(200, statistics);
     }

@@ -1,36 +1,81 @@
 package gtu.cse.cse396.sdbelt.system.infra.adapter;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Component;
 
+import gtu.cse.cse396.sdbelt.system.domain.config.DefaultSystemConfig;
 import gtu.cse.cse396.sdbelt.system.domain.model.System;
+import gtu.cse.cse396.sdbelt.system.domain.model.SystemStatus;
 import gtu.cse.cse396.sdbelt.system.domain.service.SystemService;
+import gtu.cse.cse396.sdbelt.system.infra.mapper.SystemMapper;
+import gtu.cse.cse396.sdbelt.system.infra.repository.JpaSystemRepository;
+import gtu.cse.cse396.sdbelt.ws.domain.model.RawMessage;
+import gtu.cse.cse396.sdbelt.ws.domain.model.RestartSystemCommand;
+import gtu.cse.cse396.sdbelt.ws.domain.model.StartSystemCommand;
+import gtu.cse.cse396.sdbelt.ws.domain.model.StopSystemCommand;
+import gtu.cse.cse396.sdbelt.ws.domain.service.WebSocketService;
+import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
+@Transactional
 public class SystemAdapter implements SystemService {
+
+    private final DefaultSystemConfig config;
+    private final WebSocketService webSocketService;
+    private final JpaSystemRepository jpaSystemRepository;
+
+    @PostConstruct
+    public void init() {
+        try {
+            get();
+        } catch (Exception e) {
+            System system = new System(config.getId(), config.getName(), config.getDescription(), LocalDateTime.now(),
+                    LocalDateTime.now(), SystemStatus.INACTIVE, config.getAccuracy(), config.getSpeed());
+            jpaSystemRepository.save(SystemMapper.toEntity(system));
+        }
+    }
 
     @Override
     public System get() {
-        // Implementation for retrieving the current system status and configuration
-        return null;
+        return SystemMapper.toDomain(jpaSystemRepository.findById(config.getId())
+                .orElseThrow(() -> new RuntimeException("System not found")));
     }
 
     @Override
     public void start() {
-        // Implementation for starting the scanning system
+        StartSystemCommand command = new StartSystemCommand();
+        RawMessage message = RawMessage.ofCommand(command);
+        webSocketService.send(message);
+        System system = get();
+        System updatedSystem = system.copyWith(SystemStatus.ACTIVE);
+        jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
     }
 
     @Override
     public void stop() {
-        // Implementation for stopping the scanning system
+        StopSystemCommand command = new StopSystemCommand();
+        RawMessage message = RawMessage.ofCommand(command);
+        webSocketService.send(message);
+        System system = get();
+        System updatedSystem = system.copyWith(SystemStatus.INACTIVE);
+        jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
     }
 
     @Override
     public void restart() {
-        // Implementation for restarting the scanning system
+        RestartSystemCommand command = new RestartSystemCommand();
+        RawMessage message = RawMessage.ofCommand(command);
+        webSocketService.send(message);
     }
 
     @Override
     public void update(String name, String description) {
-        // Implementation for updating the system's configuration or metadata
+        System system = get();
+        System updatedSystem = system.copyWith(name, description);
+        jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
     }
 }
