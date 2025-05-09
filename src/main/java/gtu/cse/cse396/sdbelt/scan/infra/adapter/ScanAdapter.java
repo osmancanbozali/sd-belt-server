@@ -47,12 +47,18 @@ public class ScanAdapter implements ScanService {
      */
     @Override
     @Transactional
-    public void create(Long productId, Boolean isSuccess, String errorMessage) {
+    public void create(Long productId, Boolean isSuccess, Long timestamp, String errorMessage) {
+        // Convert timestamp to LocalDateTime if provided
+        if (timestamp != null) {
+            timestamp = LocalDateTime.ofEpochSecond(timestamp, 0, ZoneOffset.UTC).toEpochSecond(ZoneOffset.UTC);
+        } else {
+            timestamp = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        }
         Scan scan = Scan.builder()
                 .productId(productId)
                 .isSuccess(isSuccess)
                 .errorMessage(errorMessage)
-                .timestamp(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))
+                .timestamp(timestamp)
                 .build();
         scanRepository.save(ScanMapper.toEntity(scan));
     }

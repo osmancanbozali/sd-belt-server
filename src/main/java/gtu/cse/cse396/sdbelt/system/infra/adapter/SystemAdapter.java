@@ -73,9 +73,9 @@ public class SystemAdapter implements SystemService {
     }
 
     @Override
-    public void update(String name, String description) {
+    public void update(String name, String description, Integer speed, Integer accuracy) {
         System system = get();
-        System updatedSystem = system.copyWith(name, description);
+        System updatedSystem = new System(system.id(), name, description, system.createdAt(), system.runAt(), system.status(), accuracy, speed);
         jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
     }
 }

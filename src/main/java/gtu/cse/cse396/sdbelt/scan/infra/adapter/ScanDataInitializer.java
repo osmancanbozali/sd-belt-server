@@ -44,10 +44,10 @@ public class ScanDataInitializer implements ApplicationRunner {
             long endEpoch = now.toEpochSecond(ZoneOffset.UTC);
 
             long randomEpoch = ThreadLocalRandom.current().nextLong(startEpoch, endEpoch);
-            LocalDateTime randomTimestamp = LocalDateTime.ofInstant(Instant.ofEpochSecond(randomEpoch), ZoneOffset.UTC);
+            /* LocalDateTime randomTimestamp = LocalDateTime.ofInstant(Instant.ofEpochSecond(randomEpoch), ZoneOffset.UTC); */
 
             // Save scan
-            scanService.create(productId, isSuccess, errorMessage);
+            scanService.create(productId, isSuccess, randomEpoch, errorMessage);
 
             // Optionally print progress every 100
             if (i % 100 == 0) {

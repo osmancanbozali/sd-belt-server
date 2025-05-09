@@ -3,11 +3,12 @@ package gtu.cse.cse396.sdbelt.system.infra.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -78,8 +79,8 @@ public class SystemController {
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to update system info.")
     })
     @PostMapping("/system/update")
-    public Response<String> updateSystem(@RequestBody String name, @RequestBody String description) {
-        service.update(name, description);
+    public Response<String> updateSystem(@RequestParam String name, @RequestParam String description, @RequestParam Integer speed, @RequestParam Integer accuracy) {
+        service.update(name, description, speed, accuracy);
         return ResponseBuilder.build(200, "System info updated successfully");
     }
 }

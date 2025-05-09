@@ -29,7 +29,7 @@ public interface ScanService {
      * @throws IllegalArgumentException if the product ID is invalid or missing
      *                                  required data
      */
-    void create(Long productId, Boolean isSuccess, String errorMessage);
+    void create(Long productId, Boolean isSuccess, Long timestamp, String errorMessage);
 
     /**
      * Retrieves a list of all scan records in the system.

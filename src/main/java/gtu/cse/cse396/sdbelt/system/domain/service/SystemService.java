@@ -47,6 +47,6 @@ public interface SystemService {
      * @param name        the new name for the system
      * @param description the new description for the system
      */
-    void update(String name, String description);
+    void update(String name, String description, Integer speed, Integer accuracy);
 }
 

@@ -1,6 +1,7 @@
 package gtu.cse.cse396.sdbelt.scan.domain.model;
 
 import lombok.Builder;
+import lombok.Getter;
 
 /**
  * Represents the result of a product scan performed during the conveyor belt

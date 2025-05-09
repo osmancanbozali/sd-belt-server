@@ -67,8 +67,4 @@ public class ScanEntity {
      * JPA lifecycle callback used to automatically set the {@link #timestamp}
      * to the current system time just before the entity is persisted.
      */
-    @PrePersist
-    protected void onCreate() {
-        this.timestamp = LocalDateTime.now();
-    }
 }
