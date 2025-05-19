@@ -18,7 +18,7 @@ public class ScanDataInitializer implements ApplicationRunner {
 
     private final ScanService scanService;
 
-    private static final int SCAN_COUNT = 0;
+    private static final int SCAN_COUNT = 1000;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -29,28 +29,28 @@ public class ScanDataInitializer implements ApplicationRunner {
 
         System.out.println("Initializing scan data...");
 
+        final String[] PRODUCT_IDS = { "BANANA", "APPLE" };
+
         Random random = new Random();
 
         for (int i = 0; i < SCAN_COUNT; i++) {
-            Long productId = (long) (1 + random.nextInt(5)); // productId between 1 and 5
-            boolean isSuccess = random.nextBoolean();
+            String productId = PRODUCT_IDS[random.nextInt(PRODUCT_IDS.length)];
+            double threshold = 80.0;
+            Double healthRatio = random.nextDouble(100);
+            boolean isSuccess = healthRatio > threshold;
             String errorMessage = isSuccess ? null : "Scan failed due to random error";
 
             // Generate random timestamp between 2 years ago and now
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime twoYearsAgo = now.minusYears(2);
 
-            long startEpoch = twoYearsAgo.toEpochSecond(ZoneOffset.UTC);
-            long endEpoch = now.toEpochSecond(ZoneOffset.UTC);
-
-            long randomEpoch = ThreadLocalRandom.current().nextLong(startEpoch, endEpoch);
             /*
              * LocalDateTime randomTimestamp =
              * LocalDateTime.ofInstant(Instant.ofEpochSecond(randomEpoch), ZoneOffset.UTC);
              */
 
             // Save scan
-            scanService.create("BANANA", 30.0, isSuccess, errorMessage);
+            scanService.create(productId, random.nextDouble(100), isSuccess, errorMessage);
 
             // Optionally print progress every 100
             if (i % 100 == 0) {
