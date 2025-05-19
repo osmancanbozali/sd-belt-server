@@ -29,7 +29,7 @@ public interface ScanService {
      * @throws IllegalArgumentException if the product ID is invalid or missing
      *                                  required data
      */
-    void create(Long productId, Boolean isSuccess, Long timestamp, String errorMessage);
+    void create(String productId, Double healthRatio, Boolean isHealthy, String errorMessage);
 
     /**
      * Retrieves a list of all scan records in the system.
@@ -78,5 +78,5 @@ public interface ScanService {
      * @throws IllegalArgumentException if any input is null or if the date range is
      *                                  invalid
      */
-    ProductStatistics generateStatistics(Long productId, LocalDateTime startDate, LocalDateTime endDate);
+    ProductStatistics generateStatistics(String productId, LocalDateTime startDate, LocalDateTime endDate);
 }

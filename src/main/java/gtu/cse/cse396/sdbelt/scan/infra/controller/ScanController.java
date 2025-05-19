@@ -1,7 +1,10 @@
 package gtu.cse.cse396.sdbelt.scan.infra.controller;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import gtu.cse.cse396.sdbelt.scan.domain.model.GeneralStatistics;
 import gtu.cse.cse396.sdbelt.scan.domain.model.ProductStatistics;
 import gtu.cse.cse396.sdbelt.scan.domain.model.Scan;
+import gtu.cse.cse396.sdbelt.scan.domain.model.ScanRequestDTO;
 import gtu.cse.cse396.sdbelt.scan.domain.service.ScanService;
 import gtu.cse.cse396.sdbelt.scan.infra.model.ScanFilter;
 import gtu.cse.cse396.sdbelt.shared.model.Response;
@@ -52,10 +56,39 @@ public class ScanController {
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to add scan.")
     })
     @PostMapping("/scans")
-    public Response<Scan> addScan(@RequestBody Scan scan) {
-        System.out.println("Scan: " + scan);
-        service.create(scan.productId(), scan.isSuccess(), scan.timestamp(), scan.errorMessage());
-        return ResponseBuilder.build(200, scan);
+    public Response<Void> addScan(@RequestBody List<ScanRequestDTO> scans) {
+        double threshold = 78.0;
+        int numberOfScans = scans.size();
+        double score = 0.0;
+        Map<String, Double> productConfidenceMap = new HashMap<>();
+        for (ScanRequestDTO scan : scans) {
+            String productId = scan.productResult().split("_")[0];
+            boolean isSuccess = scan.productResult().split("_")[1].equals("HEALTHY");
+            double health = isSuccess ? scan.confidence() : 100.0 - scan.confidence();
+            score += health / numberOfScans;
+            if (productConfidenceMap.containsKey(productId)) {
+                productConfidenceMap.put(productId, productConfidenceMap.get(productId) + scan.confidence());
+            } else {
+                productConfidenceMap.put(productId, health);
+            }
+        }
+        boolean isSuccess = score >= threshold;
+        String productId = "";
+        Double productIdScore = 0.0;
+        for (Map.Entry<String, Double> entry : productConfidenceMap.entrySet()) {
+            if (entry.getValue() > productIdScore) {
+                productIdScore = entry.getValue();
+                productId = entry.getKey();
+            }
+
+        }
+        if (isSuccess) {
+            service.create(productId, score, isSuccess, null);
+        } else {
+            service.create(productId, score, isSuccess,
+                    "Scan of product" + productId + " with score" + score + "failed");
+        }
+        return ResponseBuilder.build(200, null);
     }
 
     @Operation(summary = "Get general statistics", description = "Get general statistics")
@@ -79,7 +112,7 @@ public class ScanController {
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to retrieve statistics.")
     })
     @GetMapping(value = "/scans/statistics", params = { "productId", "startDate", "endDate" })
-    public Response<ProductStatistics> getProductStatistics(@RequestParam(required = true) Long productId,
+    public Response<ProductStatistics> getProductStatistics(@RequestParam(required = true) String productId,
             @RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate) {
         ProductStatistics statistics = service.generateStatistics(productId, startDate, endDate);
         return ResponseBuilder.build(200, statistics);

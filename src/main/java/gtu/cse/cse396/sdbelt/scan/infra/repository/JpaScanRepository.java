@@ -12,9 +12,10 @@ public interface JpaScanRepository extends JpaRepository<ScanEntity, Long>, JpaS
 
     // Custom query methods can be defined here if needed
     // For example, to find scans by productId or timestamp range
-    List<ScanEntity> findByProductIdAndTimestampBetween(Long productId, LocalDateTime startTime, LocalDateTime endTime);
+    List<ScanEntity> findByProductIdAndTimestampBetween(String productId, LocalDateTime startTime,
+            LocalDateTime endTime);
 
-    List<ScanEntity> findByProductId(Long productId);
+    List<ScanEntity> findByProductId(String productId);
 
     List<ScanEntity> findByTimestampBetween(LocalDateTime startTime, LocalDateTime endTime);
 }

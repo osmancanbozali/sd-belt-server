@@ -13,11 +13,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductDataInitializer implements ApplicationRunner {
 
+    static final String[] DEFAULT_PRODUCT_IDS = { "BANANA", "APPLE" };
+
     static final String[] DEFAULT_PRODUCT_NAMES = {
-            "Elma", "Pet Şişe", "Kalem", "Silgi", "Kutu"
+            "Muz", "Elma"
     };
     static final String[] DEFAULT_PRODUCT_DESCRIPTIONS = {
-            "Elma açıklaması", "Pet Şişe açıklaması", "Kalem açıklaması", "Silgi açıklaması", "Kutu açıklaması"
+            "Muz", "Elma"
     };
 
     static final String[] DEFAULT_PRODUCT_IMAGE_IDS = {
@@ -30,18 +32,13 @@ public class ProductDataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         List<Product> existingProducts = productService.list();
 
-        if (existingProducts.size() >= 5) {
+        if (existingProducts.size() >= 2) {
             System.out.println("Database already initialized with at least 5 products.");
             return;
         }
 
-        long nextId = existingProducts.stream()
-                .mapToLong(Product::id)
-                .max()
-                .orElse(0L) + 1;
-
-        for (int i = 0; i < 5 - existingProducts.size(); i++) {
-            long productId = nextId + i;
+        for (int i = 0; i < 2 - existingProducts.size(); i++) {
+            String productId = DEFAULT_PRODUCT_IDS[i % DEFAULT_PRODUCT_IDS.length];
             String name = DEFAULT_PRODUCT_NAMES[i % DEFAULT_PRODUCT_NAMES.length];
             String description = DEFAULT_PRODUCT_DESCRIPTIONS[i % DEFAULT_PRODUCT_DESCRIPTIONS.length];
             String imageId = DEFAULT_PRODUCT_IMAGE_IDS[i % DEFAULT_PRODUCT_IMAGE_IDS.length];

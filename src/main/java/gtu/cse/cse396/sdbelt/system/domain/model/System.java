@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Builder
 public record System(

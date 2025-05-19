@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ScanEntity {
 
     /**
@@ -38,7 +40,7 @@ public class ScanEntity {
      * This field acts as a foreign key reference to a {@code ProductEntity},
      * although not explicitly mapped here.
      */
-    private Long productId;
+    private String productId;
 
     /**
      * The timestamp when the scan was performed.
@@ -46,7 +48,8 @@ public class ScanEntity {
      * Automatically set just before the entity is persisted using
      * {@link #onCreate()}.
      */
-    private LocalDateTime timestamp;
+
+    private Double healthRatio;
 
     /**
      * Indicates whether the scan was successful.
@@ -67,4 +70,6 @@ public class ScanEntity {
      * JPA lifecycle callback used to automatically set the {@link #timestamp}
      * to the current system time just before the entity is persisted.
      */
+
+    private LocalDateTime timestamp;
 }

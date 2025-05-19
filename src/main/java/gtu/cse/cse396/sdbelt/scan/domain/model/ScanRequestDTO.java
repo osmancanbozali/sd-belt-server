@@ -1,7 +1,5 @@
 package gtu.cse.cse396.sdbelt.scan.domain.model;
 
-import java.time.LocalDateTime;
-
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,15 +12,17 @@ import lombok.Getter;
  * and an optional error message if the scan failed.
  */
 @Builder
-public record Scan(
+public record ScanRequestDTO(
 
-        String productId,
+        /**
+         * The unique identifier of the product that was scanned.
+         * <p>
+         * This field links the scan result back to the product it belongs to.
+         */
+        String productResult,
 
-        Double healthRatio,
+        Double confidence,
 
-        Boolean isSuccess,
-
-        String errorMessage,
-
-        LocalDateTime timestamp) {
+        Double x,
+        Double y) {
 }

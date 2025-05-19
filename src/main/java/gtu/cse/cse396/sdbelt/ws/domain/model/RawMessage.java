@@ -2,9 +2,6 @@ package gtu.cse.cse396.sdbelt.ws.domain.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import lombok.Builder;
-
-@Builder
 public record RawMessage(
         Long id,
         MessageType type,
@@ -12,21 +9,19 @@ public record RawMessage(
         long timestamp) {
 
     public static final <T> RawMessage ofCommand(Command<T> command) {
-        return RawMessage.builder()
-                .id(generateId())
-                .type(MessageType.COMMAND)
-                .content(command.getContent())
-                .timestamp(System.currentTimeMillis())
-                .build();
+        return new RawMessage(
+                generateId(),
+                MessageType.COMMAND,
+                command.getContent(),
+                System.currentTimeMillis());
     }
 
     public static final <T> RawMessage ofEvent(Event<T> event) {
-        return RawMessage.builder()
-                .id(generateId())
-                .type(MessageType.EVENT)
-                .content(event.getContent())
-                .timestamp(System.currentTimeMillis())
-                .build();
+        return new RawMessage(
+                generateId(),
+                MessageType.EVENT,
+                event.getContent(),
+                System.currentTimeMillis());
     }
 
     private static Long generateId() {

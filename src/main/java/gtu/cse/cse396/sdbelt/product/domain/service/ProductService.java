@@ -25,7 +25,7 @@ public interface ProductService {
      * @param description a brief description of the product; can be null or empty
      * @param imageId     the ID of the product's image; can be null or empty
      */
-    void create(Long id, String name, String description, String imageId);
+    void create(String id, String name, String description, String imageId);
 
     /**
      * Updates an existing product identified by the given ID.
@@ -36,7 +36,7 @@ public interface ProductService {
      * @param imageId     the new ID of the product's image; can be null or empty
      * @throws IllegalArgumentException if the product does not exist
      */
-    void update(Long id, String name, String description, String imageId);
+    void update(String id, String name, String description, String imageId);
 
     /**
      * Deletes the product identified by the given ID.
@@ -44,7 +44,7 @@ public interface ProductService {
      * @param id the long id of the product to delete; must not be null
      * @throws IllegalArgumentException if the product does not exist
      */
-    void delete(Long id);
+    void delete(String id);
 
     /**
      * Retrieves the product with the specified ID.
@@ -53,7 +53,7 @@ public interface ProductService {
      * @return the product entity
      * @throws IllegalArgumentException if the product does not exist
      */
-    Product get(Long id);
+    Product get(String id);
 
     /**
      * Attempts to find a product with the specified ID.
@@ -61,7 +61,7 @@ public interface ProductService {
      * @param id the long id of the product; must not be null
      * @return an {@link Optional} containing the product if found, or empty if not
      */
-    Optional<Product> find(Long id);
+    Optional<Product> find(String id);
 
     /**
      * Lists all available products in the system.

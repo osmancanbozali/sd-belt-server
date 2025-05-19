@@ -20,7 +20,7 @@ public class ProductAdapter implements ProductService {
     private final JpaProductRepository productRepository;
 
     @Override
-    public void create(Long id, String name, String description, String imageId) {
+    public void create(String id, String name, String description, String imageId) {
         Product product = Product.builder().id(id).name(name).description(description)
                 .imageId(imageId).createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
         ProductEntity entity = ProductMapper.toEntity(product);
@@ -28,7 +28,7 @@ public class ProductAdapter implements ProductService {
     }
 
     @Override
-    public void update(Long id, String name, String description, String imageId) {
+    public void update(String id, String name, String description, String imageId) {
         ProductEntity entity = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
         entity.setName(name);
@@ -39,19 +39,19 @@ public class ProductAdapter implements ProductService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         productRepository.deleteById(id);
     }
 
     @Override
-    public Product get(Long id) {
+    public Product get(String id) {
         ProductEntity entity = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
         return ProductMapper.toDomain(entity);
     }
 
     @Override
-    public Optional<Product> find(Long id) {
+    public Optional<Product> find(String id) {
         if (productRepository.existsById(id)) {
             ProductEntity entity = productRepository.findById(id).orElse(null);
             return Optional.of(ProductMapper.toDomain(entity));

@@ -15,7 +15,8 @@ import lombok.Setter;
 public class ProductEntity {
 
     @Id
-    private Long id;
+    @Column(nullable = false, unique = true)
+    private String id;
 
     @Column(nullable = false)
     private String name;

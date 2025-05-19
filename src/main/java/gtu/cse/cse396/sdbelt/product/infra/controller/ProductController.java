@@ -34,7 +34,7 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to retrieve product info.")
     })
     @GetMapping("/product/{id}")
-    public Response<Product> getProduct(@PathVariable Long id) {
+    public Response<Product> getProduct(@PathVariable String id) {
         Product product = service.get(id);
         return ResponseBuilder.build(200, product);
     }
@@ -60,7 +60,7 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to delete product.")
     })
     @DeleteMapping("/product/{id}")
-    public Response<Long> deleteProduct(@PathVariable Long id) {
+    public Response<String> deleteProduct(@PathVariable String id) {
         service.delete(id);
         return ResponseBuilder.build(200, id);
     }
@@ -73,7 +73,7 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to add product.")
     })
     @PostMapping(value = "/products", params = { "id", "name", "description", "imageId" })
-    public Response<Void> addProduct(@RequestParam Long id,
+    public Response<Void> addProduct(@RequestParam String id,
             @RequestParam String name, @RequestParam String description,
             @RequestParam String imageId) {
         service.create(id, name, description, imageId);
@@ -88,7 +88,7 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to update product.")
     })
     @PostMapping(value = "/product/{id}", params = { "name", "description", "imageId" })
-    public Response<Product> updateProduct(@PathVariable Long id,
+    public Response<Product> updateProduct(@PathVariable String id,
             @RequestParam String name, @RequestParam String description,
             @RequestParam String imageId) {
         service.update(id, name, description, imageId);

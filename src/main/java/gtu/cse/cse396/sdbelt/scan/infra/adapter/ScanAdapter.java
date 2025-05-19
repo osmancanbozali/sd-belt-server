@@ -47,15 +47,12 @@ public class ScanAdapter implements ScanService {
      */
     @Override
     @Transactional
-    public void create(Long productId, Boolean isSuccess, Long timestamp, String errorMessage) {
+    public void create(String productId, Double healthRatio, Boolean isSuccess, String errorMessage) {
         // Convert timestamp to LocalDateTime if provided
-        if (timestamp != null) {
-            timestamp = LocalDateTime.ofEpochSecond(timestamp, 0, ZoneOffset.UTC).toEpochSecond(ZoneOffset.UTC);
-        } else {
-            timestamp = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-        }
+        LocalDateTime timestamp = LocalDateTime.now();
         Scan scan = Scan.builder()
                 .productId(productId)
+                .healthRatio(healthRatio)
                 .isSuccess(isSuccess)
                 .errorMessage(errorMessage)
                 .timestamp(timestamp)
@@ -176,7 +173,7 @@ public class ScanAdapter implements ScanService {
         double failureRate = totalScanned > 0 ? (double) totalFailed / totalScanned * 100.0 : 0.0;
 
         // Group scans by product ID for product-specific statistics
-        Map<Long, List<ScanEntity>> scansByProduct = scans.stream()
+        Map<String, List<ScanEntity>> scansByProduct = scans.stream()
                 .collect(Collectors.groupingBy(ScanEntity::getProductId));
 
         List<ProductStatistics> productStatistics = new ArrayList<>();
@@ -206,7 +203,7 @@ public class ScanAdapter implements ScanService {
      */
     @Override
     @Transactional(readOnly = true)
-    public ProductStatistics generateStatistics(Long productId, LocalDateTime startDate, LocalDateTime endDate) {
+    public ProductStatistics generateStatistics(String productId, LocalDateTime startDate, LocalDateTime endDate) {
         List<ScanEntity> scans = scanRepository.findByProductIdAndTimestampBetween(productId, startDate, endDate);
         return generateProductStatistics(productId, startDate, endDate, scans);
     }
@@ -220,7 +217,8 @@ public class ScanAdapter implements ScanService {
      * @param scans     The list of scan entities for this product
      * @return Product-specific statistics
      */
-    private ProductStatistics generateProductStatistics(Long productId, LocalDateTime startDate, LocalDateTime endDate,
+    private ProductStatistics generateProductStatistics(String productId, LocalDateTime startDate,
+            LocalDateTime endDate,
             List<ScanEntity> scans) {
         long totalScanned = scans.size();
         long totalSuccess = scans.stream().filter(ScanEntity::getIsSuccess).count();
