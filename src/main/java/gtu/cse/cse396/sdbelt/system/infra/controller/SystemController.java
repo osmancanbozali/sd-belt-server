@@ -87,6 +87,18 @@ public class SystemController {
         return ResponseBuilder.build(200, "System shutdown successfully");
     }
 
+    @Operation(summary = "Restart the belt system", description = "Restart the belt system")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "System restarted successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
+            @ApiResponse(responseCode = "500", description = "Internal server error. Unable to restart system.")
+    })
+    @PatchMapping("/system/reverse")
+    public Response<String> reverse() {
+        service.reverse();
+        return ResponseBuilder.build(200, "System reversed successfully");
+    }
+
     @Operation(summary = "Update system info", description = "Update system info")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "System info updated successfully"),

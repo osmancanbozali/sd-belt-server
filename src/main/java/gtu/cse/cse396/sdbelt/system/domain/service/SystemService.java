@@ -63,4 +63,6 @@ public interface SystemService {
 
     void updateInfo(SystemStatusInfo info);
 
+    void reverse();
+
 }

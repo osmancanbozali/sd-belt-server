@@ -19,10 +19,12 @@ import gtu.cse.cse396.sdbelt.ws.domain.service.WebSocketService;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class SystemAdapter implements SystemService {
 
     private final DefaultSystemConfig config;
@@ -109,9 +111,10 @@ public class SystemAdapter implements SystemService {
 
     @Override
     public void updateInfo(SystemStatusInfo info) {
+        java.lang.System.out.println("Updating system info: " + info);
         System system = get();
         Integer m1 = Integer.decode(info.memoryUsage().split("/")[0]);
-        Integer m2 = Integer.decode(info.memoryUsage().split("/")[1]);
+        Integer m2 = Integer.decode(info.memoryUsage().split("/")[1].split(" ")[0]);
         double memoryUsage = m1 / m2;
 
         System updatedSystem = new System(system.id(), system.name(), system.description(), system.createdAt(),
@@ -119,6 +122,14 @@ public class SystemAdapter implements SystemService {
                 system.status(), system.accuracy(), system.speed(), system.beltDirection(), info.cpuUsage(),
                 info.cpuDegree(), memoryUsage,
                 LocalDateTime.now());
+        jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
+    }
+
+    public void reverse() {
+        System system = get();
+        BeltDirection newDirection = system.beltDirection() == BeltDirection.FORWARD ? BeltDirection.REVERSE
+                : BeltDirection.FORWARD;
+        System updatedSystem = system.copyWith(newDirection);
         jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
     }
 }

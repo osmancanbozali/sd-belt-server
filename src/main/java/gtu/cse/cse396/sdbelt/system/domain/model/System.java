@@ -132,4 +132,22 @@ public record System(
                 .lastUpdated(this.lastUpdated)
                 .build();
     }
+
+    System copyWith(BeltDirection direction) {
+        return System.builder()
+                .id(id)
+                .name(this.name)
+                .description(this.description)
+                .createdAt(this.createdAt)
+                .runAt(this.runAt)
+                .status(this.status)
+                .accuracy(this.accuracy)
+                .speed(this.speed)
+                .beltDirection(direction)
+                .cpuUsage(this.cpuUsage)
+                .cpuTemperature(this.cpuTemperature)
+                .memoryUsage(this.memoryUsage)
+                .lastUpdated(this.lastUpdated)
+                .build();
+    }
 }
