@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 import gtu.cse.cse396.sdbelt.system.domain.config.DefaultSystemConfig;
+import gtu.cse.cse396.sdbelt.system.domain.model.BeltDirection;
 import gtu.cse.cse396.sdbelt.system.domain.model.System;
 import gtu.cse.cse396.sdbelt.system.domain.model.SystemStatus;
 import gtu.cse.cse396.sdbelt.system.domain.service.SystemService;
@@ -34,7 +35,8 @@ public class SystemAdapter implements SystemService {
             get();
         } catch (Exception e) {
             System system = new System(config.getId(), config.getName(), config.getDescription(), LocalDateTime.now(),
-                    LocalDateTime.now(), SystemStatus.INACTIVE, config.getAccuracy(), config.getSpeed());
+                    LocalDateTime.now(), SystemStatus.INACTIVE, config.getAccuracy(), config.getSpeed(),
+                    BeltDirection.FORWARD, 0, 0, 0);
             jpaSystemRepository.save(SystemMapper.toEntity(system));
         }
     }
@@ -56,12 +58,22 @@ public class SystemAdapter implements SystemService {
     }
 
     @Override
+    public void shutdown() {
+        StartSystemCommand command = new StartSystemCommand();
+        RawMessage message = RawMessage.ofCommand(command);
+        webSocketService.send(message);
+        System system = get();
+        System updatedSystem = system.copyWith(SystemStatus.INACTIVE);
+        jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
+    }
+
+    @Override
     public void stop() {
         StopSystemCommand command = new StopSystemCommand();
         RawMessage message = RawMessage.ofCommand(command);
         webSocketService.send(message);
         System system = get();
-        System updatedSystem = system.copyWith(SystemStatus.INACTIVE);
+        System updatedSystem = system.copyWith(SystemStatus.STOPPED);
         jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
     }
 
@@ -73,10 +85,11 @@ public class SystemAdapter implements SystemService {
     }
 
     @Override
-    public void update(String name, String description, Integer speed, Integer accuracy) {
+    public void update(String name, String description, Integer speed, Integer accuracy,
+            BeltDirection beltDirection, Integer cpuUsage, Integer cpuUtilization, Integer memoryUsage) {
         System system = get();
         System updatedSystem = new System(system.id(), name, description, system.createdAt(), system.runAt(),
-                system.status(), accuracy, speed);
+                system.status(), accuracy, speed, beltDirection, cpuUsage, cpuUtilization, memoryUsage);
         jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
     }
 }

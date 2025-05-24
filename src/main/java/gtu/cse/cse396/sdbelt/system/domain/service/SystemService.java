@@ -1,5 +1,6 @@
 package gtu.cse.cse396.sdbelt.system.domain.service;
 
+import gtu.cse.cse396.sdbelt.system.domain.model.BeltDirection;
 import gtu.cse.cse396.sdbelt.system.domain.model.System;
 
 /**
@@ -13,7 +14,8 @@ public interface SystemService {
     /**
      * Retrieves the current status and configuration of the scanning system.
      *
-     * @return the current {@link System} object containing system metadata and state
+     * @return the current {@link System} object containing system metadata and
+     *         state
      */
     System get();
 
@@ -42,11 +44,20 @@ public interface SystemService {
     void restart();
 
     /**
-     * Updates the system's configuration or metadata, such as its name or description.
+     * Restarts the scanning system.
+     * <p>
+     * Equivalent to calling {@link #stop()} followed by {@link #start()},
+     * used to reinitialize system components or recover from errors.
+     */
+    void shutdown();
+
+    /**
+     * Updates the system's configuration or metadata, such as its name or
+     * description.
      *
      * @param name        the new name for the system
      * @param description the new description for the system
      */
-    void update(String name, String description, Integer speed, Integer accuracy);
+    void update(String name, String description, Integer speed, Integer accuracy, BeltDirection beltDirection,
+            Integer cpuUsage, Integer cpuUtilization, Integer memoryUsage);
 }
-

@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 
 @Builder
 public record System(
@@ -70,7 +69,13 @@ public record System(
          * This field indicates the operational speed of the system, typically measured
          * in units per minute.
          */
-        Integer speed) {
+        Integer speed,
+
+        BeltDirection beltDirection,
+
+        Integer cpuUsage,
+        Integer cpuUtilization,
+        Integer memoryUsage) {
 
     public System copyWith(SystemStatus status) {
         return System.builder()
@@ -82,6 +87,10 @@ public record System(
                 .status(status)
                 .accuracy(this.accuracy)
                 .speed(this.speed)
+                .beltDirection(this.beltDirection)
+                .cpuUsage(this.cpuUsage)
+                .cpuUtilization(this.cpuUtilization)
+                .memoryUsage(this.memoryUsage)
                 .build();
     }
 
@@ -95,6 +104,10 @@ public record System(
                 .status(this.status)
                 .accuracy(this.accuracy)
                 .speed(this.speed)
+                .beltDirection(this.beltDirection)
+                .cpuUsage(this.cpuUsage)
+                .cpuUtilization(this.cpuUtilization)
+                .memoryUsage(this.memoryUsage)
                 .build();
     }
 
@@ -108,6 +121,10 @@ public record System(
                 .status(status)
                 .accuracy(this.accuracy)
                 .speed(this.speed)
+                .beltDirection(this.beltDirection)
+                .cpuUsage(this.cpuUsage)
+                .cpuUtilization(this.cpuUtilization)
+                .memoryUsage(this.memoryUsage)
                 .build();
     }
 }

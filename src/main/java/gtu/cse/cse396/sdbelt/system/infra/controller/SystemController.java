@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import gtu.cse.cse396.sdbelt.system.domain.model.BeltDirection;
 import gtu.cse.cse396.sdbelt.system.domain.model.System;
 import gtu.cse.cse396.sdbelt.system.domain.service.SystemService;
 import gtu.cse.cse396.sdbelt.shared.model.Response;
@@ -21,7 +22,7 @@ import gtu.cse.cse396.sdbelt.shared.model.ResponseBuilder;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class SystemController {
-    
+
     private final SystemService service;
 
     @Operation(summary = "Get system info", description = "Get system info")
@@ -72,6 +73,18 @@ public class SystemController {
         return ResponseBuilder.build(200, "System restarted successfully");
     }
 
+    @Operation(summary = "Restart the belt system", description = "Restart the belt system")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "System restarted successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
+            @ApiResponse(responseCode = "500", description = "Internal server error. Unable to restart system.")
+    })
+    @PatchMapping("/system/shutdown")
+    public Response<String> shutdownSystem() {
+        service.shutdown();
+        return ResponseBuilder.build(200, "System shutdown successfully");
+    }
+
     @Operation(summary = "Update system info", description = "Update system info")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "System info updated successfully"),
@@ -79,8 +92,11 @@ public class SystemController {
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to update system info.")
     })
     @PostMapping("/system/update")
-    public Response<String> updateSystem(@RequestParam String name, @RequestParam String description, @RequestParam Integer speed, @RequestParam Integer accuracy) {
-        service.update(name, description, speed, accuracy);
+    public Response<String> updateSystem(@RequestParam String name, @RequestParam String description,
+            @RequestParam Integer speed, @RequestParam Integer accuracy, @RequestParam String beltDirection,
+            @RequestParam Integer cpuUsage, @RequestParam Integer cpuUtilization, @RequestParam Integer memoryUsage) {
+        service.update(name, description, speed, accuracy,
+                BeltDirection.valueOf(beltDirection.toUpperCase()), cpuUsage, cpuUtilization, memoryUsage);
         return ResponseBuilder.build(200, "System info updated successfully");
     }
 }
