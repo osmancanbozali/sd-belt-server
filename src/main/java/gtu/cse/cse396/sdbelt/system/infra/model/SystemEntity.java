@@ -64,11 +64,14 @@ public class SystemEntity {
     private BeltDirection beltDirection; // Assuming this is a string representation of the BeltDirection enum
 
     @Column(name = "cpu_usage")
-    private Integer cpuUsage;
+    private Double cpuUsage;
 
-    @Column(name = "cpu_utilization")
-    private Integer cpuUtilization;
+    @Column(name = "cpu_temperature")
+    private Double cpuTemperature;
 
     @Column(name = "memory_usage")
-    private Integer memoryUsage;
+    private Double memoryUsage;
+
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
 }

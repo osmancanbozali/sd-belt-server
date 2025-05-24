@@ -2,6 +2,7 @@ package gtu.cse.cse396.sdbelt.scan.domain.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Represents the result of a product scan performed during the conveyor belt
@@ -21,8 +22,18 @@ public record ScanRequestDTO(
          */
         String productResult,
 
-        Double confidence,
+        String confidence,
 
-        Double x,
-        Double y) {
+        String x,
+        String y) {
+
+    @Override
+    public String toString() {
+        return "ScanRequestDTO{" +
+                "productResult='" + productResult + '\'' +
+                ", confidence=" + confidence +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

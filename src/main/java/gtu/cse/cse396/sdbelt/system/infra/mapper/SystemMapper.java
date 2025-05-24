@@ -23,8 +23,9 @@ public class SystemMapper {
                 entity.getSpeed(),
                 entity.getBeltDirection(),
                 entity.getCpuUsage(),
-                entity.getCpuUtilization(),
-                entity.getMemoryUsage());
+                entity.getCpuTemperature(),
+                entity.getMemoryUsage(),
+                entity.getLastUpdated());
     }
 
     public static SystemEntity toEntity(System system) {
@@ -39,8 +40,9 @@ public class SystemMapper {
                 system.speed(),
                 system.beltDirection(),
                 system.cpuUsage(),
-                system.cpuUtilization(),
-                system.memoryUsage());
+                system.cpuTemperature(),
+                system.memoryUsage(),
+                system.lastUpdated());
     }
 
 }

@@ -73,9 +73,11 @@ public record System(
 
         BeltDirection beltDirection,
 
-        Integer cpuUsage,
-        Integer cpuUtilization,
-        Integer memoryUsage) {
+        Double cpuUsage,
+        Double cpuTemperature,
+        Double memoryUsage,
+
+        LocalDateTime lastUpdated) {
 
     public System copyWith(SystemStatus status) {
         return System.builder()
@@ -89,8 +91,9 @@ public record System(
                 .speed(this.speed)
                 .beltDirection(this.beltDirection)
                 .cpuUsage(this.cpuUsage)
-                .cpuUtilization(this.cpuUtilization)
+                .cpuTemperature(this.cpuTemperature)
                 .memoryUsage(this.memoryUsage)
+                .lastUpdated(this.lastUpdated)
                 .build();
     }
 
@@ -106,8 +109,9 @@ public record System(
                 .speed(this.speed)
                 .beltDirection(this.beltDirection)
                 .cpuUsage(this.cpuUsage)
-                .cpuUtilization(this.cpuUtilization)
+                .cpuTemperature(this.cpuTemperature)
                 .memoryUsage(this.memoryUsage)
+                .lastUpdated(this.lastUpdated)
                 .build();
     }
 
@@ -123,8 +127,9 @@ public record System(
                 .speed(this.speed)
                 .beltDirection(this.beltDirection)
                 .cpuUsage(this.cpuUsage)
-                .cpuUtilization(this.cpuUtilization)
+                .cpuTemperature(this.cpuTemperature)
                 .memoryUsage(this.memoryUsage)
+                .lastUpdated(this.lastUpdated)
                 .build();
     }
 }

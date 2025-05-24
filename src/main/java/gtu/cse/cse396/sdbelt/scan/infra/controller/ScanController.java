@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import gtu.cse.cse396.sdbelt.scan.domain.model.GeneralStatistics;
 import gtu.cse.cse396.sdbelt.scan.domain.model.ProductStatistics;
 import gtu.cse.cse396.sdbelt.scan.domain.model.Scan;
@@ -31,6 +32,7 @@ import gtu.cse.cse396.sdbelt.shared.model.ResponseBuilder;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
+@Slf4j
 public class ScanController {
 
     private final ScanService service;
@@ -57,17 +59,24 @@ public class ScanController {
     })
     @PostMapping("/scans")
     public Response<Void> addScan(@RequestBody List<ScanRequestDTO> scans) {
+        System.out.println("Getting scans" + scans.size() + " scans: " + scans.toString());
+        for (ScanRequestDTO scan : scans) {
+            System.out.println("Received scan: " + scan.toString());
+        }
         double threshold = 78.0;
         int numberOfScans = scans.size();
         double score = 0.0;
         Map<String, Double> productConfidenceMap = new HashMap<>();
         for (ScanRequestDTO scan : scans) {
+            Double confidence = Double.parseDouble(scan.confidence());
+            Double x = Double.parseDouble(scan.x());
+            Double y = Double.parseDouble(scan.y());
             String productId = scan.productResult().split("_")[0];
-            boolean isSuccess = scan.productResult().split("_")[1].equals("HEALTHY");
-            double health = isSuccess ? scan.confidence() : 100.0 - scan.confidence();
+            boolean isSuccess = scan.productResult().split("_")[1].equals("Healthy");
+            double health = isSuccess ? confidence : 100.0 - confidence;
             score += health / numberOfScans;
             if (productConfidenceMap.containsKey(productId)) {
-                productConfidenceMap.put(productId, productConfidenceMap.get(productId) + scan.confidence());
+                productConfidenceMap.put(productId, productConfidenceMap.get(productId) + confidence);
             } else {
                 productConfidenceMap.put(productId, health);
             }

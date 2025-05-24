@@ -14,7 +14,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import gtu.cse.cse396.sdbelt.system.domain.model.BeltDirection;
 import gtu.cse.cse396.sdbelt.system.domain.model.System;
+import gtu.cse.cse396.sdbelt.system.domain.model.SystemStatus;
 import gtu.cse.cse396.sdbelt.system.domain.service.SystemService;
+import gtu.cse.cse396.sdbelt.system.infra.adapter.SystemStatusInfo;
 import gtu.cse.cse396.sdbelt.shared.model.Response;
 import gtu.cse.cse396.sdbelt.shared.model.ResponseBuilder;
 
@@ -93,10 +95,21 @@ public class SystemController {
     })
     @PostMapping("/system/update")
     public Response<String> updateSystem(@RequestParam String name, @RequestParam String description,
-            @RequestParam Integer speed, @RequestParam Integer accuracy, @RequestParam String beltDirection,
-            @RequestParam Integer cpuUsage, @RequestParam Integer cpuUtilization, @RequestParam Integer memoryUsage) {
+            @RequestParam Integer speed, @RequestParam Integer accuracy, @RequestParam String beltDirection) {
         service.update(name, description, speed, accuracy,
-                BeltDirection.valueOf(beltDirection.toUpperCase()), cpuUsage, cpuUtilization, memoryUsage);
+                BeltDirection.valueOf(beltDirection.toUpperCase()));
+        return ResponseBuilder.build(200, "System info updated successfully");
+    }
+
+    @Operation(summary = "Update system info", description = "Update system info")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "System info updated successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
+            @ApiResponse(responseCode = "500", description = "Internal server error. Unable to update system info.")
+    })
+    @PostMapping("/system/info")
+    public Response<String> infoUpdate(@RequestBody SystemStatusInfo info) {
+        service.updateInfo(info);
         return ResponseBuilder.build(200, "System info updated successfully");
     }
 }

@@ -2,6 +2,7 @@ package gtu.cse.cse396.sdbelt.system.domain.service;
 
 import gtu.cse.cse396.sdbelt.system.domain.model.BeltDirection;
 import gtu.cse.cse396.sdbelt.system.domain.model.System;
+import gtu.cse.cse396.sdbelt.system.infra.adapter.SystemStatusInfo;
 
 /**
  * Service interface for managing the overall conveyor belt scanning system.
@@ -58,6 +59,8 @@ public interface SystemService {
      * @param name        the new name for the system
      * @param description the new description for the system
      */
-    void update(String name, String description, Integer speed, Integer accuracy, BeltDirection beltDirection,
-            Integer cpuUsage, Integer cpuUtilization, Integer memoryUsage);
+    void update(String name, String description, Integer speed, Integer accuracy, BeltDirection beltDirection);
+
+    void updateInfo(SystemStatusInfo info);
+
 }
