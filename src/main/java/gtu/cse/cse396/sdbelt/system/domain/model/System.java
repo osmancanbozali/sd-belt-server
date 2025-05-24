@@ -133,7 +133,7 @@ public record System(
                 .build();
     }
 
-    System copyWith(BeltDirection direction) {
+    public System copyWith(BeltDirection direction) {
         return System.builder()
                 .id(id)
                 .name(this.name)
