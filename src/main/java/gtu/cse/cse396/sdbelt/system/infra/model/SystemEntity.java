@@ -2,6 +2,7 @@ package gtu.cse.cse396.sdbelt.system.infra.model;
 
 import java.util.UUID;
 
+import gtu.cse.cse396.sdbelt.system.domain.model.BeltDirection;
 import gtu.cse.cse396.sdbelt.system.domain.model.SystemStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,9 +13,11 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 /**
- * JPA entity representing the system record in the conveyor belt systemning system.
+ * JPA entity representing the system record in the conveyor belt systemning
+ * system.
  * <p>
- * Each instance corresponds to a row in the {@code systems} table and captures the
+ * Each instance corresponds to a row in the {@code systems} table and captures
+ * the
  * result of an individual system operation for a product.
  */
 @Entity
@@ -55,4 +58,17 @@ public class SystemEntity {
 
     @Column(name = "speed")
     private Integer speed;
+
+    @Column(name = "belt_direction")
+    @Enumerated(EnumType.STRING)
+    private BeltDirection beltDirection; // Assuming this is a string representation of the BeltDirection enum
+
+    @Column(name = "cpu_usage")
+    private Integer cpuUsage;
+
+    @Column(name = "cpu_utilization")
+    private Integer cpuUtilization;
+
+    @Column(name = "memory_usage")
+    private Integer memoryUsage;
 }

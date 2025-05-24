@@ -10,7 +10,7 @@ public class SystemMapper {
     private SystemMapper() {
         // Private constructor to prevent instantiation
     }
-    
+
     public static System toDomain(SystemEntity entity) {
         return new System(
                 entity.getId(),
@@ -20,8 +20,11 @@ public class SystemMapper {
                 entity.getRunAt(),
                 entity.getStatus(),
                 entity.getAccuracy(),
-                entity.getSpeed()
-        );
+                entity.getSpeed(),
+                entity.getBeltDirection(),
+                entity.getCpuUsage(),
+                entity.getCpuUtilization(),
+                entity.getMemoryUsage());
     }
 
     public static SystemEntity toEntity(System system) {
@@ -33,8 +36,11 @@ public class SystemMapper {
                 system.runAt(),
                 system.status(),
                 system.accuracy(),
-                system.speed()
-        );
+                system.speed(),
+                system.beltDirection(),
+                system.cpuUsage(),
+                system.cpuUtilization(),
+                system.memoryUsage());
     }
-  
-} 
+
+}
