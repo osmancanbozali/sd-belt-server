@@ -31,6 +31,8 @@ public interface ScanService {
      */
     void create(String productId, Double healthRatio, Boolean isHealthy, String errorMessage);
 
+    void create(String productId, Double healthRatio, Boolean isHealthy, String errorMessage, LocalDateTime scanTime);
+
     /**
      * Retrieves a list of all scan records in the system.
      *

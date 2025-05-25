@@ -52,12 +52,8 @@ public class SystemAdapter implements SystemService {
 
     @Override
     public void start() {
-        /*
-         * StartSystemCommand command = new StartSystemCommand();
-         * RawMessage message = RawMessage.ofCommand(command);
-         * webSocketService.send(message);
-         */
-        systemCommandSender.sendStartCommand();
+
+        systemCommandSender.sendSpeedCommand(40);
         System system = get();
         System updatedSystem = system.copyWith(SystemStatus.ACTIVE);
         jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
@@ -130,6 +126,20 @@ public class SystemAdapter implements SystemService {
         BeltDirection newDirection = system.beltDirection() == BeltDirection.FORWARD ? BeltDirection.REVERSE
                 : BeltDirection.FORWARD;
         System updatedSystem = system.copyWith(newDirection);
+        jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
+    }
+
+    @Override
+    public void updateAccuracy(Integer accuracy) {
+        System system = get();
+        System updatedSystem = system.copyWith(system.speed(), accuracy);
+        jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
+    }
+
+    @Override
+    public void updateSpeed(Integer speed) {
+        System system = get();
+        System updatedSystem = system.copyWith(speed, system.accuracy());
         jpaSystemRepository.save(SystemMapper.toEntity(updatedSystem));
     }
 }

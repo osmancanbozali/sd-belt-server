@@ -27,16 +27,16 @@ class SystemCommandSender {
     /**
      * Send start command via HTTP POST
      */
-    public void sendStartCommand() {
+    public void sendSpeedCommand(int speedPercent) {
         try {
-            String url = serverUrl + "/start";
-            HttpEntity<String> request = createTextPlainRequest("START");
+            String url = serverUrl + "/speed";
+            HttpEntity<String> request = createTextPlainRequest(String.valueOf(speedPercent));
 
             ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-            log.debug("[POST /start] Response: {}", response.getBody());
+            log.debug("[POST /speed] Sent: {} | Response: {}", speedPercent, response.getBody());
         } catch (Exception e) {
-            log.error("Failed to send start command", e);
-            throw new RuntimeException("Start command failed", e);
+            log.error("Failed to send speed command", e);
+            throw new RuntimeException("Speed command failed", e);
         }
     }
 

@@ -65,4 +65,8 @@ public interface SystemService {
 
     void reverse();
 
+    void updateAccuracy(Integer accuracy);
+
+    void updateSpeed(Integer speed);
+
 }

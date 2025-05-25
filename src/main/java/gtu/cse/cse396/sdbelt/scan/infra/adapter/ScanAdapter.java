@@ -60,6 +60,20 @@ public class ScanAdapter implements ScanService {
         scanRepository.save(ScanMapper.toEntity(scan));
     }
 
+    @Override
+    @Transactional
+    public void create(String productId, Double healthRatio, Boolean isSuccess, String errorMessage,
+            LocalDateTime scanTime) {
+        Scan scan = Scan.builder()
+                .productId(productId)
+                .healthRatio(healthRatio)
+                .isSuccess(isSuccess)
+                .errorMessage(errorMessage)
+                .timestamp(scanTime)
+                .build();
+        scanRepository.save(ScanMapper.toEntity(scan));
+    }
+
     /**
      * Retrieves all scan records.
      *

@@ -42,15 +42,15 @@ public class ScanDataInitializer implements ApplicationRunner {
 
             // Generate random timestamp between 2 years ago and now
             LocalDateTime now = LocalDateTime.now();
-            LocalDateTime twoYearsAgo = now.minusYears(2);
+            LocalDateTime sixDaysAgo = now.minusDays(6);
 
-            /*
-             * LocalDateTime randomTimestamp =
-             * LocalDateTime.ofInstant(Instant.ofEpochSecond(randomEpoch), ZoneOffset.UTC);
-             */
+            long randomEpoch = ThreadLocalRandom.current()
+                    .nextLong(sixDaysAgo.toEpochSecond(ZoneOffset.UTC), now.toEpochSecond(ZoneOffset.UTC));
+
+            LocalDateTime randomTimestamp = LocalDateTime.ofInstant(Instant.ofEpochSecond(randomEpoch), ZoneOffset.UTC);
 
             // Save scan
-            scanService.create(productId, random.nextDouble(100), isSuccess, errorMessage);
+            scanService.create(productId, random.nextDouble(100), isSuccess, errorMessage, randomTimestamp);
 
             // Optionally print progress every 100
             if (i % 100 == 0) {

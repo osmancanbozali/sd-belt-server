@@ -113,6 +113,18 @@ public class SystemController {
         return ResponseBuilder.build(200, "System info updated successfully");
     }
 
+    @PostMapping("/system/accuracy")
+    public Response<String> updateSystemAccuracy(@RequestParam Integer accuracy) {
+        service.updateAccuracy(accuracy);
+        return ResponseBuilder.build(200, "System accuracy updated successfully");
+    }
+
+    @PostMapping("/system/speed")
+    public Response<String> updateSystemSpeed(@RequestParam Integer speed) {
+        service.updateSpeed(speed);
+        return ResponseBuilder.build(200, "System speed updated successfully");
+    }
+
     @Operation(summary = "Update system info", description = "Update system info")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "System info updated successfully"),

@@ -150,4 +150,22 @@ public record System(
                 .lastUpdated(this.lastUpdated)
                 .build();
     }
+
+    public System copyWith(Integer speed, Integer accuracy) {
+        return System.builder()
+                .id(this.id)
+                .name(this.name)
+                .description(this.description)
+                .createdAt(this.createdAt)
+                .runAt(this.runAt)
+                .status(this.status)
+                .accuracy(accuracy)
+                .speed(speed)
+                .beltDirection(this.beltDirection)
+                .cpuUsage(this.cpuUsage)
+                .cpuTemperature(this.cpuTemperature)
+                .memoryUsage(this.memoryUsage)
+                .lastUpdated(this.lastUpdated)
+                .build();
+    }
 }
