@@ -61,7 +61,7 @@ public record System(
          * This field indicates the precision of the system's operations, typically
          * represented as a percentage.
          */
-        Integer accuracy,
+        Double threshold,
 
         /**
          * Speed of the system.
@@ -79,6 +79,24 @@ public record System(
 
         LocalDateTime lastUpdated) {
 
+    public System copyWith(SystemStatus status, Double cpuUsage, Double cpuTemperature, Double memoryUsage) {
+        return System.builder()
+                .id(this.id)
+                .name(this.name)
+                .description(this.description)
+                .createdAt(this.createdAt)
+                .runAt(this.runAt)
+                .status(status)
+                .threshold(this.threshold)
+                .speed(this.speed)
+                .beltDirection(this.beltDirection)
+                .cpuUsage(cpuUsage)
+                .cpuTemperature(cpuTemperature)
+                .memoryUsage(memoryUsage)
+                .lastUpdated(LocalDateTime.now())
+                .build();
+    }
+
     public System copyWith(SystemStatus status) {
         return System.builder()
                 .id(this.id)
@@ -87,13 +105,13 @@ public record System(
                 .createdAt(this.createdAt)
                 .runAt(this.runAt)
                 .status(status)
-                .accuracy(this.accuracy)
+                .threshold(this.threshold)
                 .speed(this.speed)
                 .beltDirection(this.beltDirection)
                 .cpuUsage(this.cpuUsage)
                 .cpuTemperature(this.cpuTemperature)
                 .memoryUsage(this.memoryUsage)
-                .lastUpdated(this.lastUpdated)
+                .lastUpdated(LocalDateTime.now())
                 .build();
     }
 
@@ -105,7 +123,7 @@ public record System(
                 .createdAt(this.createdAt)
                 .runAt(this.runAt)
                 .status(this.status)
-                .accuracy(this.accuracy)
+                .threshold(this.threshold)
                 .speed(this.speed)
                 .beltDirection(this.beltDirection)
                 .cpuUsage(this.cpuUsage)
@@ -123,7 +141,7 @@ public record System(
                 .createdAt(this.createdAt)
                 .runAt(this.runAt)
                 .status(status)
-                .accuracy(this.accuracy)
+                .threshold(this.threshold)
                 .speed(this.speed)
                 .beltDirection(this.beltDirection)
                 .cpuUsage(this.cpuUsage)
@@ -141,7 +159,7 @@ public record System(
                 .createdAt(this.createdAt)
                 .runAt(this.runAt)
                 .status(this.status)
-                .accuracy(this.accuracy)
+                .threshold(this.threshold)
                 .speed(this.speed)
                 .beltDirection(direction)
                 .cpuUsage(this.cpuUsage)
@@ -151,7 +169,7 @@ public record System(
                 .build();
     }
 
-    public System copyWith(Integer speed, Integer accuracy) {
+    public System copyWith(Integer speed, Double threshold) {
         return System.builder()
                 .id(this.id)
                 .name(this.name)
@@ -159,7 +177,7 @@ public record System(
                 .createdAt(this.createdAt)
                 .runAt(this.runAt)
                 .status(this.status)
-                .accuracy(accuracy)
+                .threshold(threshold)
                 .speed(speed)
                 .beltDirection(this.beltDirection)
                 .cpuUsage(this.cpuUsage)

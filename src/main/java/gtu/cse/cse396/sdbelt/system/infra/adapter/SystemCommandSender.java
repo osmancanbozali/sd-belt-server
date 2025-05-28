@@ -40,6 +40,32 @@ class SystemCommandSender {
         }
     }
 
+    public void sendThresholdCommand(double threshold) {
+        try {
+            String url = serverUrl + "/threshold";
+            HttpEntity<String> request = createTextPlainRequest(String.valueOf(threshold));
+
+            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+            log.debug("[POST /threshold] Sent: {} | Response: {}", threshold, response.getBody());
+        } catch (Exception e) {
+            log.debug("Failed to send speed command");
+            throw new RuntimeException("Thresh command failed", e);
+        }
+    }
+
+    public void sendReverseCommand() {
+        try {
+            String url = serverUrl + "/rev";
+            HttpEntity<String> request = createTextPlainRequest("REV");
+
+            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+            log.debug("[POST /rev] Sent: REV | Response: {}", response.getBody());
+        } catch (Exception e) {
+            log.error("Failed to send reverse command", e);
+            throw new RuntimeException("Reverse command failed", e);
+        }
+    }
+
     /**
      * Send shutdown command via HTTP POST
      */

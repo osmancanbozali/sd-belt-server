@@ -1,5 +1,7 @@
 package gtu.cse.cse396.sdbelt.system.infra.controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import gtu.cse.cse396.sdbelt.system.domain.model.BeltDirection;
 import gtu.cse.cse396.sdbelt.system.domain.model.System;
-import gtu.cse.cse396.sdbelt.system.domain.model.SystemStatus;
+import gtu.cse.cse396.sdbelt.system.domain.model.SystemLatestInfo;
 import gtu.cse.cse396.sdbelt.system.domain.service.SystemService;
 import gtu.cse.cse396.sdbelt.system.infra.adapter.SystemStatusInfo;
 import gtu.cse.cse396.sdbelt.shared.model.Response;
@@ -45,7 +47,7 @@ public class SystemController {
             @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to start system.")
     })
-    @PatchMapping("/system/start")
+    @PostMapping("/system/start")
     public Response<String> startSystem() {
         service.start();
         return ResponseBuilder.build(200, "System started successfully");
@@ -57,7 +59,7 @@ public class SystemController {
             @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to stop system.")
     })
-    @PatchMapping("/system/stop")
+    @PostMapping("/system/stop")
     public Response<String> stopSystem() {
         service.stop();
         return ResponseBuilder.build(200, "System stopped successfully");
@@ -69,10 +71,23 @@ public class SystemController {
             @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to restart system.")
     })
-    @PatchMapping("/system/restart")
+    @PostMapping("/system/restart")
     public Response<String> restartSystem() {
         service.restart();
         return ResponseBuilder.build(200, "System restarted successfully");
+    }
+
+    @PostMapping("/system/logs")
+    public Response<String> saveInfo(@RequestBody SystemLatestInfo info) {
+        java.lang.System.out.println("Saving system info: " + info);
+        service.saveStatus(info);
+        return ResponseBuilder.build(200, "System info saved successfully");
+    }
+
+    @GetMapping("/system/logs")
+    public Response<List<SystemLatestInfo>> getLogs() {
+        List<SystemLatestInfo> logs = service.getLogs();
+        return ResponseBuilder.build(200, logs);
     }
 
     @Operation(summary = "Restart the belt system", description = "Restart the belt system")
@@ -81,7 +96,7 @@ public class SystemController {
             @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to restart system.")
     })
-    @PatchMapping("/system/shutdown")
+    @PostMapping("/system/shutdown")
     public Response<String> shutdownSystem() {
         service.shutdown();
         return ResponseBuilder.build(200, "System shutdown successfully");
@@ -93,8 +108,9 @@ public class SystemController {
             @ApiResponse(responseCode = "401", description = "Unauthorized request. Please check your credentials."),
             @ApiResponse(responseCode = "500", description = "Internal server error. Unable to restart system.")
     })
-    @PatchMapping("/system/reverse")
+    @PostMapping("/system/reverse")
     public Response<String> reverse() {
+        java.lang.System.out.println("Reversing the system...");
         service.reverse();
         return ResponseBuilder.build(200, "System reversed successfully");
     }
@@ -107,22 +123,32 @@ public class SystemController {
     })
     @PostMapping("/system/update")
     public Response<String> updateSystem(@RequestParam String name, @RequestParam String description,
-            @RequestParam Integer speed, @RequestParam Integer accuracy, @RequestParam String beltDirection) {
-        service.update(name, description, speed, accuracy,
+            @RequestParam Integer speed, @RequestParam Double threshold, @RequestParam String beltDirection) {
+        service.update(name, description, speed, threshold,
                 BeltDirection.valueOf(beltDirection.toUpperCase()));
         return ResponseBuilder.build(200, "System info updated successfully");
     }
 
-    @PostMapping("/system/accuracy")
-    public Response<String> updateSystemAccuracy(@RequestParam Integer accuracy) {
-        service.updateAccuracy(accuracy);
-        return ResponseBuilder.build(200, "System accuracy updated successfully");
+    @PostMapping("/system/threshold")
+    public Response<String> updateSystemThreshold(@RequestBody String body) {
+        try {
+            double threshold = Double.parseDouble(body.trim());
+            service.updateThreshold(threshold);
+            return ResponseBuilder.build(200, "System threshold updated successfully");
+        } catch (NumberFormatException e) {
+            return ResponseBuilder.build(400, "Invalid threshold value: must be an double");
+        }
     }
 
     @PostMapping("/system/speed")
-    public Response<String> updateSystemSpeed(@RequestParam Integer speed) {
-        service.updateSpeed(speed);
-        return ResponseBuilder.build(200, "System speed updated successfully");
+    public Response<String> updateSystemSpeed(@RequestBody String body) {
+        try {
+            int speed = Integer.parseInt(body.trim());
+            service.updateSpeed(speed);
+            return ResponseBuilder.build(200, "System speed updated successfully");
+        } catch (NumberFormatException e) {
+            return ResponseBuilder.build(400, "Invalid speed value: must be an integer");
+        }
     }
 
     @Operation(summary = "Update system info", description = "Update system info")

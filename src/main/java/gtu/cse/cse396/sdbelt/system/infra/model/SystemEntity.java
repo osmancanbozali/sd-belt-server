@@ -53,8 +53,8 @@ public class SystemEntity {
     @Column(name = "status", nullable = false)
     private SystemStatus status;
 
-    @Column(name = "accuracy")
-    private Integer accuracy;
+    @Column(name = "threshold")
+    private Double threshold;
 
     @Column(name = "speed")
     private Integer speed;

@@ -1,7 +1,11 @@
 package gtu.cse.cse396.sdbelt.system.domain.service;
 
+import java.util.List;
+
 import gtu.cse.cse396.sdbelt.system.domain.model.BeltDirection;
 import gtu.cse.cse396.sdbelt.system.domain.model.System;
+import gtu.cse.cse396.sdbelt.system.domain.model.SystemLatestInfo;
+import gtu.cse.cse396.sdbelt.system.domain.model.SystemStatus;
 import gtu.cse.cse396.sdbelt.system.infra.adapter.SystemStatusInfo;
 
 /**
@@ -59,14 +63,21 @@ public interface SystemService {
      * @param name        the new name for the system
      * @param description the new description for the system
      */
-    void update(String name, String description, Integer speed, Integer accuracy, BeltDirection beltDirection);
+    void update(String name, String description, Integer speed, Double threshold, BeltDirection beltDirection);
 
     void updateInfo(SystemStatusInfo info);
 
     void reverse();
 
-    void updateAccuracy(Integer accuracy);
+    void updateThreshold(Double threshold);
 
     void updateSpeed(Integer speed);
 
+    void update(SystemStatus status);
+
+    void update(SystemStatus status, Double cpuUsage, Double cpuTemperature, Double memoryUsage);
+
+    void saveStatus(SystemLatestInfo info);
+
+    List<SystemLatestInfo> getLogs();
 }

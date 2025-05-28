@@ -28,6 +28,7 @@ import gtu.cse.cse396.sdbelt.scan.domain.service.ScanService;
 import gtu.cse.cse396.sdbelt.scan.infra.model.ScanFilter;
 import gtu.cse.cse396.sdbelt.shared.model.Response;
 import gtu.cse.cse396.sdbelt.shared.model.ResponseBuilder;
+import gtu.cse.cse396.sdbelt.system.domain.service.SystemService;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,6 +37,7 @@ import gtu.cse.cse396.sdbelt.shared.model.ResponseBuilder;
 public class ScanController {
 
     private final ScanService service;
+    private final SystemService systemService;
 
     @Operation(summary = "Get all scans", description = "Get all scans")
     @ApiResponses(value = {
@@ -63,7 +65,10 @@ public class ScanController {
         for (ScanRequestDTO scan : scans) {
             System.out.println("Received scan: " + scan.toString());
         }
-        double threshold = 78.0;
+        double threshold = 70.0;
+        if (systemService.get().threshold() != null) {
+            threshold = systemService.get().threshold();
+        }
         int numberOfScans = scans.size();
         double score = 0.0;
         Map<String, Double> productConfidenceMap = new HashMap<>();
