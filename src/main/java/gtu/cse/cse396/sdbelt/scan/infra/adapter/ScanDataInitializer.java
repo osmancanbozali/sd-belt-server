@@ -29,14 +29,14 @@ public class ScanDataInitializer implements ApplicationRunner {
 
         System.out.println("Initializing scan data...");
 
-        final String[] PRODUCT_IDS = { "BANANA", "APPLE" };
+        final String[] PRODUCT_IDS = { "Apple", "Orange", "Potato" };
 
         Random random = new Random();
 
         for (int i = 0; i < SCAN_COUNT; i++) {
             String productId = PRODUCT_IDS[random.nextInt(PRODUCT_IDS.length)];
             double threshold = 80.0;
-            Double healthRatio = random.nextDouble(100);
+            Double healthRatio = random.nextDouble(100) + 50.0;
             boolean isSuccess = healthRatio > threshold;
             String errorMessage = isSuccess ? null : "Scan failed due to random error";
 

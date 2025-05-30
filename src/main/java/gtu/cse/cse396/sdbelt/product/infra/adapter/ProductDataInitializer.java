@@ -13,13 +13,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductDataInitializer implements ApplicationRunner {
 
-    static final String[] DEFAULT_PRODUCT_IDS = { "BANANA", "APPLE", "PORTAKAL" };
+    static final String[] DEFAULT_PRODUCT_IDS = { "Apple", "Orange", "Potato" };
 
     static final String[] DEFAULT_PRODUCT_NAMES = {
-            "Muz", "Elma", "Portakal"
+            "Apple", "Orange", "Potato"
     };
     static final String[] DEFAULT_PRODUCT_DESCRIPTIONS = {
-            "Muz", "Elma", "Portakal"
+            "Elma", "Portakal", "Patates"
     };
 
     static final String[] DEFAULT_PRODUCT_IMAGE_IDS = {

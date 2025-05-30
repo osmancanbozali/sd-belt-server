@@ -48,7 +48,7 @@ public class ScanController {
     })
     @GetMapping("/scans")
     public Response<List<Scan>> getAllScans(@ParameterObject @ModelAttribute ScanFilter filter) {
-        List<Scan> scans = service.find(filter);
+        List<Scan> scans = service.list();
         return ResponseBuilder.build(200, scans);
     }
 
@@ -71,22 +71,34 @@ public class ScanController {
         }
         int numberOfScans = scans.size();
         double score = 0.0;
+        int count = 0;
         Map<String, Double> productConfidenceMap = new HashMap<>();
         for (ScanRequestDTO scan : scans) {
             Double confidence = Double.parseDouble(scan.confidence());
             Double x = Double.parseDouble(scan.x());
             Double y = Double.parseDouble(scan.y());
+            if (scan.productResult() == null || scan.productResult().isEmpty()) {
+                throw new IllegalArgumentException("Product result cannot be null or empty");
+            }
             String productId = scan.productResult().split("_")[0];
-            boolean isSuccess = scan.productResult().split("_")[1].equals("Healthy");
-            double health = isSuccess ? confidence : 100.0 - confidence;
+            boolean isHealthy = scan.productResult().split("_")[1].equals("Healthy");
+            double health = isHealthy ? confidence : -1 * confidence;
             score += health / numberOfScans;
+            if (!isHealthy) {
+                productConfidenceMap.put(productId, 300.0);
+            }
             if (productConfidenceMap.containsKey(productId)) {
+
                 productConfidenceMap.put(productId, productConfidenceMap.get(productId) + confidence);
             } else {
                 productConfidenceMap.put(productId, health);
             }
+            if (isHealthy) {
+                count++;
+            }
         }
-        boolean isSuccess = score >= threshold;
+        boolean flag1 = (count == numberOfScans);
+        boolean flag2 = score >= threshold;
         String productId = "";
         Double productIdScore = 0.0;
         for (Map.Entry<String, Double> entry : productConfidenceMap.entrySet()) {
@@ -96,11 +108,12 @@ public class ScanController {
             }
 
         }
-        if (isSuccess) {
-            service.create(productId, score, isSuccess, null);
+
+        if (flag1 && flag2) {
+            service.create(productId, score, true, null);
         } else {
-            service.create(productId, score, isSuccess,
-                    "Scan of product" + productId + " with score" + score + "failed");
+            service.create(productId, score, false,
+                    "Scan with productId: " + productId + " with score" + score + "failed");
         }
         return ResponseBuilder.build(200, null);
     }

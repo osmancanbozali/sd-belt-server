@@ -1,5 +1,7 @@
 package gtu.cse.cse396.sdbelt.system.infra.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +27,7 @@ public class SystemStatusEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String timestamp;
+    private LocalDateTime timestamp;
 
     private String level;
 

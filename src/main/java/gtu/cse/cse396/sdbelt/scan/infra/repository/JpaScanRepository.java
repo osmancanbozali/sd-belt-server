@@ -11,6 +11,9 @@ import gtu.cse.cse396.sdbelt.scan.infra.model.ScanEntity;
 
 public interface JpaScanRepository extends JpaRepository<ScanEntity, Long>, JpaSpecificationExecutor<ScanEntity> {
 
+    @Query("SELECT s FROM ScanEntity s ORDER BY s.timestamp DESC")
+    List<ScanEntity> findAll();
+
     @Query("SELECT s FROM ScanEntity s WHERE s.productId = :productId AND s.timestamp BETWEEN :startTime AND :endTime ORDER BY s.timestamp DESC")
     List<ScanEntity> findByProductIdAndTimestampBetween(String productId, LocalDateTime startTime,
             LocalDateTime endTime);

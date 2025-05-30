@@ -1,8 +1,11 @@
 package gtu.cse.cse396.sdbelt.system.infra.adapter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
 import gtu.cse.cse396.sdbelt.system.domain.config.DefaultSystemConfig;
@@ -36,8 +39,13 @@ public class SystemAdapter implements SystemService {
     @Override
     public void saveStatus(SystemLatestInfo info) {
         SystemStatusEntity entity = new SystemStatusEntity();
+        Instant instant = Instant.parse(info.timestamp());
+        // Or convert to LocalDateTime in UTC
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
+        // add 3 hours to match the system's timezone if needed
+        LocalDateTime now = localDateTime.plusHours(3);
         entity.setId(null);
-        entity.setTimestamp(info.timestamp().toString());
+        entity.setTimestamp(now);
         entity.setLevel(info.level());
         entity.setMessage(info.message());
         jpaSystemLogRepository.save(entity);
@@ -47,8 +55,50 @@ public class SystemAdapter implements SystemService {
     public List<SystemLatestInfo> getLogs() {
         List<SystemStatusEntity> entities = jpaSystemLogRepository.findAll();
         return entities.stream()
-                .map(entity -> new SystemLatestInfo(entity.getTimestamp(), entity.getLevel(), entity.getMessage()))
+                .map(entity -> {
+                    String year = String.format("%04d", entity.getTimestamp().getYear());
+                    // Convert month to string in Turkish
+                    String monthNum = String.format("%02d", entity.getTimestamp().getMonthValue());
+                    String month = getMonthAsString(entity.getTimestamp().getMonthValue());
+                    String day = String.format("%02d", entity.getTimestamp().getDayOfMonth());
+                    String hour = String.format("%02d", entity.getTimestamp().getHour());
+                    String minute = String.format("%02d", entity.getTimestamp().getMinute());
+                    String second = String.format("%02d", entity.getTimestamp().getSecond());
+                    String timestamp = String.format("%s %s %s %s:%s:%s", day, month, year, hour, minute, second);
+                    return new SystemLatestInfo(timestamp, entity.getLevel(), entity.getMessage());
+                })
                 .toList();
+    }
+
+    private String getMonthAsString(int month) {
+        switch (month) {
+            case 1:
+                return "Ocak";
+            case 2:
+                return "Şubat";
+            case 3:
+                return "Mart";
+            case 4:
+                return "Nisan";
+            case 5:
+                return "Mayıs";
+            case 6:
+                return "Haziran";
+            case 7:
+                return "Temmuz";
+            case 8:
+                return "Ağustos";
+            case 9:
+                return "Eylül";
+            case 10:
+                return "Ekim";
+            case 11:
+                return "Kasım";
+            case 12:
+                return "Aralık";
+            default:
+                throw new IllegalArgumentException("Invalid month: " + month);
+        }
     }
 
     @PostConstruct
@@ -57,7 +107,7 @@ public class SystemAdapter implements SystemService {
             get();
         } catch (Exception e) {
             System system = new System(config.getId(), config.getName(), config.getDescription(), LocalDateTime.now(),
-                    LocalDateTime.now(), SystemStatus.INACTIVE, config.getThreshold(), config.getSpeed(),
+                    LocalDateTime.now(), SystemStatus.INACTIVE, 70.0, config.getSpeed(),
                     BeltDirection.FORWARD, 0.0, 0.0, 0.0, LocalDateTime.now());
             jpaSystemRepository.save(SystemMapper.toEntity(system));
         }

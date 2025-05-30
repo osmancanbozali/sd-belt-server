@@ -1,5 +1,8 @@
 package gtu.cse.cse396.sdbelt.system.infra.controller;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,6 +83,7 @@ public class SystemController {
     @PostMapping("/system/logs")
     public Response<String> saveInfo(@RequestBody SystemLatestInfo info) {
         java.lang.System.out.println("Saving system info: " + info);
+
         service.saveStatus(info);
         return ResponseBuilder.build(200, "System info saved successfully");
     }
@@ -145,6 +149,10 @@ public class SystemController {
         try {
             int speed = Integer.parseInt(body.trim());
             service.updateSpeed(speed);
+            System system = service.get();
+
+            service.updateThreshold(system.threshold() != null ? system.threshold() : 70.0);
+
             return ResponseBuilder.build(200, "System speed updated successfully");
         } catch (NumberFormatException e) {
             return ResponseBuilder.build(400, "Invalid speed value: must be an integer");
